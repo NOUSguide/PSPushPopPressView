@@ -546,13 +546,13 @@
 }
 
 - (void)moveToFullscreenWindowAnimated:(BOOL)animated {
-    if (self.isFullscreen) return;
+    if (self.isFullscreen && !self.isBeingDragged) return;
 
     [self moveToFullscreenAnimated:animated bounces:YES];
 }
 
 - (void)moveToOriginalFrameAnimated:(BOOL)animated {
-    if (self.isFullscreen == NO) return;
+    if (self.isFullscreen == NO && !self.isBeingDragged) return;
 
     [self moveViewToOriginalPositionAnimated:animated bounces:YES];
 }
