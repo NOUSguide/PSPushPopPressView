@@ -237,6 +237,10 @@
 }
 
 - (void)moveViewToOriginalPositionAnimated:(BOOL)animated bounces:(BOOL)bounces {
+    [self moveViewToOriginalPositionAnimated:animated bounces:bounces completion:nil];
+}
+
+- (void)moveViewToOriginalPositionAnimated:(BOOL)animated bounces:(BOOL)bounces completion:(void(^)(BOOL finished))completion {
     CGFloat bounceX = panTransform_.tx * kPSEmbeddedAnimationBounceMultiplier * -1;
     CGFloat bounceY = panTransform_.ty * kPSEmbeddedAnimationBounceMultiplier * -1;
 
@@ -306,10 +310,18 @@
                                  [self.pushPopPressViewDelegate pushPopPressViewDidAnimateToOriginalFrame: self];
                              }
                          }
+                         
+                         if (completion) {
+                             completion(finished);
+                         }
                      }];
 }
 
 - (void)moveToFullscreenAnimated:(BOOL)animated bounces:(BOOL)bounces {
+    [self moveToFullscreenAnimated:animated bounces:bounces completion:nil];
+}
+
+- (void)moveToFullscreenAnimated:(BOOL)animated bounces:(BOOL)bounces completion:(void(^)(BOOL finished))completion {
     if ([self.pushPopPressViewDelegate respondsToSelector: @selector(pushPopPressViewWillAnimateToFullscreenWindowFrame:duration:)]) {
         [self.pushPopPressViewDelegate pushPopPressViewWillAnimateToFullscreenWindowFrame: self duration: kPSAnimationDuration];
     }
@@ -350,14 +362,21 @@
                              }
                              anchorPointUpdated = NO;
                          }
+                         if (completion) {
+                             completion(finished);
+                         }
                      }];
 }
 
 - (void)alignViewAnimated:(BOOL)animated bounces:(BOOL)bounces {
+    [self alignViewAnimated:animated bounces:bounces completion:nil];
+}
+
+- (void)alignViewAnimated:(BOOL)animated bounces:(BOOL)bounces completion:(void(^)(BOOL finished))completion {
     if (self.frame.size.width > [self windowBounds].size.width) {
-        [self moveToFullscreenAnimated:animated bounces:bounces];
+        [self moveToFullscreenAnimated:animated bounces:bounces completion:completion];
     } else {
-        [self moveViewToOriginalPositionAnimated:animated bounces:bounces];
+        [self moveViewToOriginalPositionAnimated:animated bounces:bounces completion:completion];
     }
 }
 
@@ -392,7 +411,7 @@
     if (pinch) {
         scaleActive_ = NO;
         if (pinch.velocity >= 2.0f) {
-            [self moveToFullscreenAnimated:YES bounces:YES];
+            [self moveToFullscreenAnimated:YES bounces:YES completion:nil];
         } else {
             [self alignViewAnimated:YES bounces:YES];
         }
@@ -546,15 +565,23 @@
 }
 
 - (void)moveToFullscreenWindowAnimated:(BOOL)animated {
+    [self moveToFullscreenWindowAnimated:animated completion:nil];
+}
+
+- (void)moveToFullscreenWindowAnimated:(BOOL)animated completion:(void (^)(BOOL))completion {
     if (self.isFullscreen && !self.isBeingDragged) return;
 
-    [self moveToFullscreenAnimated:animated bounces:YES];
+    [self moveToFullscreenAnimated:animated bounces:YES completion:completion];
 }
 
 - (void)moveToOriginalFrameAnimated:(BOOL)animated {
+    [self moveToOriginalFrameAnimated:animated completion:nil];
+}
+
+- (void)moveToOriginalFrameAnimated:(BOOL)animated completion:(void (^)(BOOL))completion {
     if (self.isFullscreen == NO && !self.isBeingDragged) return;
 
-    [self moveViewToOriginalPositionAnimated:animated bounces:YES];
+    [self moveViewToOriginalPositionAnimated:animated bounces:YES completion:completion];
 }
 
 // enable/disable single tap detection

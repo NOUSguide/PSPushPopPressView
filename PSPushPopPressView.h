@@ -21,12 +21,12 @@
 - (void)pushPopPressViewDidFinishManipulation:(PSPushPopPressView *)pushPopPressView;
 
 /// view will animate back to original frame
-- (void)pushPopPressViewWillAnimateToOriginalFrame:(PSPushPopPressView *)pushPopPressView duration: (NSTimeInterval)duration;
+- (void)pushPopPressViewWillAnimateToOriginalFrame:(PSPushPopPressView *)pushPopPressView duration:(NSTimeInterval)duration;
 
 /// animation to original frame is finished
 - (void)pushPopPressViewDidAnimateToOriginalFrame:(PSPushPopPressView *)pushPopPressView;
 
-- (void)pushPopPressViewWillAnimateToFullscreenWindowFrame:(PSPushPopPressView *)pushPopPressView duration: (NSTimeInterval)duration;
+- (void)pushPopPressViewWillAnimateToFullscreenWindowFrame:(PSPushPopPressView *)pushPopPressView duration:(NSTimeInterval)duration;
 - (void)pushPopPressViewDidAnimateToFullscreenWindowFrame:(PSPushPopPressView *)pushPopPressView;
 
 - (BOOL)pushPopPressViewShouldAllowTapToAnimateToOriginalFrame:(PSPushPopPressView *)pushPopPressView;
@@ -80,11 +80,14 @@
 
 /// animate/move to fullscreen
 - (void)moveToFullscreenWindowAnimated:(BOOL)animated;
+- (void)moveToFullscreenWindowAnimated:(BOOL)animated completion:(void(^)(BOOL finished))completion;
 
 /// animate/moves to initialFrame size
 - (void)moveToOriginalFrameAnimated:(BOOL)animated;
+- (void)moveToOriginalFrameAnimated:(BOOL)animated completion:(void(^)(BOOL finished))completion;
 
 /// align view based on current size (either initialPosition or fullscreen)
 - (void)alignViewAnimated:(BOOL)animated bounces:(BOOL)bounces;
+- (void)alignViewAnimated:(BOOL)animated bounces:(BOOL)bounces completion:(void(^)(BOOL finished))completion;
 
 @end
