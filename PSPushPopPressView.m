@@ -138,9 +138,12 @@
 
     if (self.ignoreStatusBar) {
         windowBounds = [UIScreen mainScreen].bounds;
-        if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
-            windowBounds.size.width = windowBounds.size.height;
-            windowBounds.size.height = [UIScreen mainScreen].bounds.size.width;
+        
+        if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8.f) {
+            if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
+                windowBounds.size.width = windowBounds.size.height;
+                windowBounds.size.height = [UIScreen mainScreen].bounds.size.width;
+            }
         }
     }
     return windowBounds;
