@@ -264,15 +264,15 @@
                         options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowUserInteraction
                      animations:^{
                          // always reset transforms
-                         rotateTransform_ = CGAffineTransformIdentity;
-                         panTransform_ = CGAffineTransformIdentity;
-                         scaleTransform_ = CGAffineTransformIdentity;
+        self->rotateTransform_ = CGAffineTransformIdentity;
+        self->panTransform_ = CGAffineTransformIdentity;
+        self->scaleTransform_ = CGAffineTransformIdentity;
                          self.transform = CGAffineTransformIdentity;
                          
                          CGRect correctedInitialFrame = [self superviewCorrectedInitialFrame];
 
                          if (bounces) {
-                             if (abs(bounceX) > 0 || abs(bounceY) > 0) {
+                             if (fabs(bounceX) > 0 || fabs(bounceY) > 0) {
                                  CGFloat widthDifference = (self.frame.size.width - correctedInitialFrame.size.width) * 0.05;
                                  CGFloat heightDifference = (self.frame.size.height - correctedInitialFrame.size.height) * 0.05;
 
@@ -280,7 +280,7 @@
                                  [self setFrame:targetFrame];
                              } else {
                                  // there's reason behind this madness. shadow freaks out when we come from fullscreen, but not if we had transforms.
-                                 fullscreenAnimationActive_ = YES;
+                                 self->fullscreenAnimationActive_ = YES;
                                  CGRect targetFrame = CGRectMake(correctedInitialFrame.origin.x + 3, correctedInitialFrame.origin.y + 3, correctedInitialFrame.size.width - 6, correctedInitialFrame.size.height - 6);
                                  //NSLog(@"targetFrame: %@ (superview: %@; initialSuperview: %@)", NSStringFromCGRect(targetFrame), self.superview, self.initialSuperview);
                                  [self setFrame:targetFrame];
@@ -291,7 +291,7 @@
                      }
                      completion: ^(BOOL finished) {
                          //NSLog(@"moveViewToOriginalPositionAnimated [complete] finished:%d, bounces:%d", finished, bounces);
-                         fullscreenAnimationActive_ = NO;
+        self->fullscreenAnimationActive_ = NO;
                          if (bounces) {
                              [UIView animateWithDuration: kPSAnimationMoveToOriginalPositionDuration/2 delay: 0.0
                                                  options:UIViewAnimationOptionAllowUserInteraction animations: ^{
@@ -336,9 +336,9 @@
      // view hierarchy change needs some time propagating, don't use UIViewAnimationOptionBeginFromCurrentState when just changed
                         options:(viewChanged ? 0 : UIViewAnimationOptionBeginFromCurrentState) | UIViewAnimationOptionAllowUserInteraction
                      animations:^{
-                         scaleTransform_ = CGAffineTransformIdentity;
-                         rotateTransform_ = CGAffineTransformIdentity;
-                         panTransform_ = CGAffineTransformIdentity;
+        self->scaleTransform_ = CGAffineTransformIdentity;
+        self->rotateTransform_ = CGAffineTransformIdentity;
+        self->panTransform_ = CGAffineTransformIdentity;
                          self.transform = CGAffineTransformIdentity;
                          CGRect windowBounds = [self windowBounds];
                          if (bounces) {
@@ -357,13 +357,13 @@
                                  if ([self.pushPopPressViewDelegate respondsToSelector: @selector(pushPopPressViewDidAnimateToFullscreenWindowFrame:)]) {
                                      [self.pushPopPressViewDelegate pushPopPressViewDidAnimateToFullscreenWindowFrame: self];
                                  }
-                                 anchorPointUpdated = NO;
+                                 self->anchorPointUpdated = NO;
                              }];
                          } else {
                              if ([self.pushPopPressViewDelegate respondsToSelector: @selector(pushPopPressViewDidAnimateToFullscreenWindowFrame:)]) {
                                  [self.pushPopPressViewDelegate pushPopPressViewDidAnimateToFullscreenWindowFrame: self];
                              }
-                             anchorPointUpdated = NO;
+                             self->anchorPointUpdated = NO;
                          }
                          if (completion) {
                              completion(finished);
